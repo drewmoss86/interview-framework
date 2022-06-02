@@ -48,8 +48,7 @@ class ExampleController extends Controller
      * 
      * @return string view template
      */
-    public function createExample(Request $request): string
-    {
+    public function createExample(Request $request){
         if (! $code = $request->request->get('code')){
             throw new BadInputException('Example code missing');
         }
@@ -58,8 +57,37 @@ class ExampleController extends Controller
             throw new BadInputException('Example description missing');
         }
 
-        return $this->view->get(
-            $this->model->create(now(), $code, $description)
+        // Set the post request data on the ExampleModel object
+        $this->model->set($code, $description, now());
+
+     
+        // Create the new Model record and pass only the ExampleModel object to the view
+        return $this->view->getModel(
+            $this->model->create()
         );
+    }
+
+    /**
+     * sumExample
+     * 
+     * @param Request $request http request
+     * 
+     * @return int sum value
+     */
+    public function sumExample(Request $request){
+        // Validate 
+        if (! $value1 = $request->request->get('value1')) {
+            throw new BadInputException('Example value1 missing');
+        }
+
+        if (! $value2 = $request->request->get('value2')) {
+            throw new BadInputException('Example value2 missing');
+        }
+        
+        // Calculate sum based on input requests
+        $sum = $value1 + $value2;
+
+        // Return calculated sum value to view
+        return $this->view->getSum($sum);
     }
 }

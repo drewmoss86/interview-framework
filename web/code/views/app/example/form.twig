@@ -1,22 +1,44 @@
 <div class="row">
 	<div class="col">
+
+	  {# Example Form #}
 		<form id="example-form">
 			<div class="form-group">
 				<label for="example-code">Code</label>
 				<input type="text" id="example-code" class="form-control" name="code" placeholder="Example code">
 			</div>
-
 			<div class="form-group">
 				<label for="example-description">Description</label>
 				<input type="text" id="example-description" class="form-control" name="description" placeholder="Example description">
 			</div>
 
-			<button type="submit" class="btn btn-primary">Create Example</button>
+			<button type="submit" class="btn btn-primary">Create Example</button>	
 		</form>
-
+		
 		<div id="example-view"></div>
 
+		{# Sum Form #}
+		<form id="sum-form" style="margin-top:50px">
+			<div class="form-group" style="display:flex">		
+				<div class="form-group" style="padding-right:50px;">
+					<label for="example-value1">Value 1</label>
+					<input type="number" id="example-value1" class="form-control" name="value1" placeholder="Example Value 1">
+				</div>
+				<div class="form-group" style="padding-right:50px;">
+					<label for="example-value2">Value 2</label>
+					<input type="number" id="example-value2" class="form-control" name="value2" placeholder="Example Value 2">
+				</div>
+			</div>
+					
+			<div id="sum-view" class="form-group"></div>
+
+			<button type="submit" class="btn btn-primary">Add</button>
+		</form>
+
+		
+
 		<script>
+			{# Example #}
 			document.querySelector('#example-form').onsubmit = function(e) {
 				e.preventDefault();
 
@@ -24,13 +46,36 @@
 
 				// Ensure every input has a value
 				for (var [key, value] of data.entries()) { 
-					if (!value) {
-						document.querySelector('#example-form input[name="' + key + '"]').focus();
+					let currentInput = document.querySelector('#example-form input[name="' + key + '"]')
+					if (!value) {			
+						currentInput.focus();
+						currentInput.style.borderColor = 'red';
 						return;
 					}
+					currentInput.style.borderColor = 'green';
 				}
 
 				sendPost('example/create', data, view => document.querySelector('#example-view').innerHTML = view);
+			};
+
+  		{# Sum #}
+			document.querySelector('#sum-form').onsubmit = function(e) {
+				e.preventDefault();
+
+				const data = new FormData(e.target);
+
+				// Ensure every input has a value
+				for (var [key, value] of data.entries()) { 
+					let currentInput = document.querySelector('#sum-form input[name="' + key + '"]');
+					if (!value) {
+						currentInput.focus();
+						currentInput.style.borderColor = 'red';
+						return;
+					}
+					currentInput.style.borderColor = 'green';
+				}				
+
+				sendPost('example/sum', data, view => document.querySelector('#sum-view').innerHTML = view);
 			};
 		</script>
 	</div>

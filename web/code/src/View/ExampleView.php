@@ -30,22 +30,39 @@ class ExampleView
     }
 
     /**
-     * Get the example view to display its data.
+     * Get the ExampleModel object data and pass to the view
      * 
-     * @param int $id example id
+     * @param ExampleModel
      * 
-     * @return string view template
+     * @return ExampleModel object
      *
-     * @throws BadInputException if no example data is returned
+     * @throws BadInputException if id is not found
      */
-    public function get(int $id): string
-    {
-        $data = $this->model->get($id);
-
-        if (!$data) {
-            throw new BadInputException('Unknown example ID');
+    // Take in the ExampleModel object as a parameter
+    public function getModel(ExampleModel $em){
+        // Verify the ExampleModel object is initialized with data
+        if(!$em->getId()) {
+            throw new BadInputException('Invalid ID: ExampleModel object not initialized!');
+        }
+        // Pass the ExampleModel object/data to the view
+        return view('app/example/detail', ['em' => $em->getExampleModel()]);
+    }
+    /**
+     * Get the sum value to pass to the view.
+     * 
+     * @param int $sum
+     * 
+     * @return string view ExampleModel
+     *
+     * @throws BadInputException if id is not found
+     */
+    public function getSum(int $sum){
+        // Check sum value is initialized
+        if(!$sum) {
+            throw new BadInputException('Sum not found!');
         }
 
-        return view('app/example/detail', $data);
+        // Pass sum value to the view
+        return view('app/example/sum', ['sum' => $sum]);
     }
 }
